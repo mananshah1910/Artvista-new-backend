@@ -17,7 +17,7 @@ public class EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
 
-    @Value("${EMAIL_API_KEY:}")
+    @Value("${brevo.api.key:bskFVPtWSTJ1MmD}")
     private String apiKey;
 
     @Value("${spring.mail.username:mananshah7263@gmail.com}")
