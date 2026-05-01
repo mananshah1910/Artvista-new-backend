@@ -3,6 +3,9 @@ package com.artvista.backend.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * UserInquiry Entity - Stores messages sent via the contact form.
+ */
 @Entity
 @Table(name = "user_inquiries")
 public class UserInquiry {

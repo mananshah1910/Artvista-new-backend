@@ -26,7 +26,7 @@ public class Artwork {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "art_category_id")
-    private ArtCategory artCategory;
+    private com.artvista.backend.model.ArtCategory artCategory;
 
     public Artwork() {}
 
@@ -48,6 +48,6 @@ public class Artwork {
     public void setImage(String image) { this.image = image; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
-    public ArtCategory getArtCategory() { return artCategory; }
-    public void setArtCategory(ArtCategory artCategory) { this.artCategory = artCategory; }
+    public com.artvista.backend.model.ArtCategory getArtCategory() { return artCategory; }
+    public void setArtCategory(com.artvista.backend.model.ArtCategory artCategory) { this.artCategory = artCategory; }
 }

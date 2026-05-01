@@ -15,7 +15,6 @@
 	<description>Backend for Art Gallery management</description>
 	<properties>
 		<java.version>21</java.version>
-		<maven.compiler.proc>none</maven.compiler.proc>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -116,4 +115,5 @@
 		</plugins>
 	</build>
 
-</project>
+</project> 
+

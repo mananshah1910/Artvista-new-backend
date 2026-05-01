@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * ArtCategory Entity - Represents a genre or category of art.
+ */
 @Entity
 @Table(name = "art_categories")
 public class ArtCategory {

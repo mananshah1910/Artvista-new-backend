@@ -1,11 +1,8 @@
 package com.artvista.backend.config;
 
-import com.artvista.backend.model.Artwork;
-import com.artvista.backend.model.ArtCategory;
 import com.artvista.backend.model.Exhibition;
 import com.artvista.backend.model.User;
 import com.artvista.backend.repository.ArtworkRepository;
-import com.artvista.backend.repository.ArtCategoryRepository;
 import com.artvista.backend.repository.ExhibitionRepository;
 import com.artvista.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +10,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+/**
+ * DataSeeder - Initializes default data for the application.
+ */
 @Component
 public class DataSeeder implements CommandLineRunner {
 
@@ -20,7 +20,7 @@ public class DataSeeder implements CommandLineRunner {
     private ArtworkRepository artworkRepository;
 
     @Autowired
-    private ArtCategoryRepository artCategoryRepository;
+    private com.artvista.backend.repository.ArtCategoryRepository artCategoryRepository;
 
     @Autowired
     private ExhibitionRepository exhibitionRepository;
@@ -35,18 +35,18 @@ public class DataSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // 1. Seed Categories
         if (artCategoryRepository.count() == 0) {
-            artCategoryRepository.save(new ArtCategory("Painting", "Traditional and modern paintings on canvas or paper."));
-            artCategoryRepository.save(new ArtCategory("Digital Art", "Art created using digital technology and software."));
-            artCategoryRepository.save(new ArtCategory("Sculpture", "Three-dimensional art pieces made from various materials."));
-            artCategoryRepository.save(new ArtCategory("Photography", "Capturing moments and concepts through the lens."));
+            artCategoryRepository.save(new com.artvista.backend.model.ArtCategory("Painting", "Traditional and modern paintings on canvas or paper."));
+            artCategoryRepository.save(new com.artvista.backend.model.ArtCategory("Digital Art", "Art created using digital technology and software."));
+            artCategoryRepository.save(new com.artvista.backend.model.ArtCategory("Sculpture", "Three-dimensional art pieces made from various materials."));
+            artCategoryRepository.save(new com.artvista.backend.model.ArtCategory("Photography", "Capturing moments and concepts through the lens."));
         }
 
         // 2. Seed Artworks
         if (artworkRepository.count() == 0) {
-            ArtCategory painting = artCategoryRepository.findByName("Painting").orElse(null);
-            ArtCategory digital = artCategoryRepository.findByName("Digital Art").orElse(null);
+            com.artvista.backend.model.ArtCategory painting = artCategoryRepository.findByName("Painting").orElse(null);
+            com.artvista.backend.model.ArtCategory digital = artCategoryRepository.findByName("Digital Art").orElse(null);
 
-            Artwork a1 = new Artwork();
+            com.artvista.backend.model.Artwork a1 = new com.artvista.backend.model.Artwork();
             a1.setTitle("Ethereal Whispers");
             a1.setArtist("Elena Vance");
             a1.setPrice(99000.0);
@@ -57,7 +57,7 @@ public class DataSeeder implements CommandLineRunner {
             a1.setStatus("approved");
             a1.setArtCategory(painting);
 
-            Artwork a2 = new Artwork();
+            com.artvista.backend.model.Artwork a2 = new com.artvista.backend.model.Artwork();
             a2.setTitle("Vibrant Chaos");
             a2.setArtist("Julian Thorne");
             a2.setPrice(70000.0);
@@ -68,7 +68,7 @@ public class DataSeeder implements CommandLineRunner {
             a2.setStatus("approved");
             a2.setArtCategory(painting);
 
-            Artwork a7 = new Artwork();
+            com.artvista.backend.model.Artwork a7 = new com.artvista.backend.model.Artwork();
             a7.setTitle("Urban Pulse");
             a7.setArtist("Dexter Volt");
             a7.setPrice(58000.0);

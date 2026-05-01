@@ -27,7 +27,11 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    @Autowired
+    private CorsProperties corsProperties;
+
     @Bean
+
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
@@ -36,7 +40,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/artworks/**", "/api/exhibitions/**", "/api/categories/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/artworks/**", "/api/exhibitions/**", "/api/categories/**", "/").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
                 .anyRequest().authenticated()
             );
@@ -49,18 +53,12 @@ public class SecurityConfig {
     @Bean
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
         org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
-        configuration.setAllowedOrigins(java.util.Arrays.asList(
-            "http://localhost:5173",
-            "http://localhost:5174",
-            "http://localhost:5175",
-            "http://localhost:5176",
-            "http://localhost:5177",
-            "http://localhost:5178",
-            "http://localhost:5179",
-            "http://localhost:5180",
-            "https://artvista-frontend.vercel.app"
-        ));
+        String origins = corsProperties.getAllowedOrigins();
+        if (origins != null) {
+            configuration.setAllowedOrigins(java.util.Arrays.asList(origins.split(",")));
+        }
         configuration.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
+
         configuration.setAllowedHeaders(java.util.Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
@@ -68,3 +66,4 @@ public class SecurityConfig {
         return source;
     }
 }
+
