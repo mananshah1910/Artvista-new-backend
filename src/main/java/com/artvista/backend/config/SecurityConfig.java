@@ -27,10 +27,11 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    @Autowired
-    private CorsProperties corsProperties;
+    @org.springframework.beans.factory.annotation.Value("${cors.allowed-origins}")
+    private String allowedOrigins;
 
     @Bean
+
 
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -53,11 +54,11 @@ public class SecurityConfig {
     @Bean
     public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
         org.springframework.web.cors.CorsConfiguration configuration = new org.springframework.web.cors.CorsConfiguration();
-        String origins = corsProperties.getAllowedOrigins();
-        if (origins != null) {
-            configuration.setAllowedOrigins(java.util.Arrays.asList(origins.split(",")));
+        if (allowedOrigins != null) {
+            configuration.setAllowedOrigins(java.util.Arrays.asList(allowedOrigins.split(",")));
         }
         configuration.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
+
 
         configuration.setAllowedHeaders(java.util.Arrays.asList("*"));
         configuration.setAllowCredentials(true);
