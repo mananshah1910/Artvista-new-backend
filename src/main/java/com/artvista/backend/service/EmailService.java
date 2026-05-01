@@ -20,7 +20,7 @@ public class EmailService {
     @Value("${EMAIL_API_KEY:}")
     private String apiKey;
 
-    @Value("${spring.mail.username:adityasingh01227@gmail.com}")
+    @Value("${spring.mail.username:mananshah7263@gmail.com}")
     private String fromEmail;
 
     private static final String BRAND_COLOR = "#6366f1"; // Modern Indigo
@@ -126,7 +126,8 @@ public class EmailService {
                     log.info("✅ Email successfully sent to {}", toEmail);
                     System.out.println("✅ [EmailService] SUCCESS: Email sent to " + toEmail);
                 } else {
-                    String errorBody = response.body() != null ? response.body().string() : "No response body";
+                    ResponseBody responseBody = response.body();
+                    String errorBody = responseBody != null ? responseBody.string() : "No response body";
                     log.error("❌ Email API failure. Code: {}, Body: {}", response.code(), errorBody);
                     System.err.println("❌ [EmailService] ERROR: Failed to send email to " + toEmail + " | Code: " + response.code() + " | " + errorBody);
                 }
