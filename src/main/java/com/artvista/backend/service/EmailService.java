@@ -2,32 +2,31 @@ package com.artvista.backend.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.mail.MailException;
 
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.MessagingException;
-import java.io.UnsupportedEncodingException;
-import java.util.Objects;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import okhttp3.*;
+
+import java.io.IOException;
 
 @Service
 public class EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
 
-    @Autowired
-    private JavaMailSender mailSender;
+    @Value("${EMAIL_API_KEY:}")
+    private String apiKey;
 
-    @Value("${spring.mail.username}")
+    @Value("${spring.mail.username:adityasingh01227@gmail.com}")
     private String fromEmail;
 
     private static final String BRAND_COLOR = "#6366f1"; // Modern Indigo
     private static final String BRAND_NAME = "ArtVista Gallery";
+    private final OkHttpClient client = new OkHttpClient();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     private String getHtmlWrapper(String title, String content) {
         return "<div style=\"font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 40px 20px; background-color: #f8fafc; color: #1e293b;\">"
@@ -87,26 +86,55 @@ public class EmailService {
     }
 
     private void sendEmail(String toEmail, String subject, String htmlBody) {
+        if (toEmail == null || subject == null || htmlBody == null) return;
+        if (apiKey == null || apiKey.isEmpty()) {
+            System.err.println("❌ [EmailService] ERROR: EMAIL_API_KEY is not set. Cannot send email to " + toEmail);
+            return;
+        }
+
         try {
-            if (toEmail == null || subject == null || htmlBody == null) return;
+            ObjectNode payload = mapper.createObjectNode();
             
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setFrom(new InternetAddress(fromEmail, BRAND_NAME));
-            helper.setTo(toEmail);
-            helper.setSubject(subject);
+            ObjectNode sender = mapper.createObjectNode();
+            sender.put("name", BRAND_NAME);
+            sender.put("email", fromEmail);
+            payload.set("sender", sender);
             
-            String pt = htmlBody.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", " ").trim();
-            helper.setText(Objects.requireNonNull(pt), Objects.requireNonNull(htmlBody));
+            ArrayNode toArray = mapper.createArrayNode();
+            ObjectNode toObj = mapper.createObjectNode();
+            toObj.put("email", toEmail);
+            toArray.add(toObj);
+            payload.set("to", toArray);
             
-            mailSender.send(message);
-            log.info("✅ Email successfully sent to {}", toEmail);
-            System.out.println("✅ [EmailService] SUCCESS: Email sent to " + toEmail);
-        } catch (MessagingException | UnsupportedEncodingException | MailException e) {
-            log.error("❌ Email delivery failure to {}. Reason: {}", toEmail, e.getMessage());
-            System.err.println("❌ [EmailService] ERROR: Failed to send email to " + toEmail + " | " + e.getMessage());
-        } catch (RuntimeException e) {
-            log.error("❌ Unexpected runtime error during email delivery to {}: {}", toEmail, e.getMessage(), e);
+            payload.put("subject", subject);
+            payload.put("htmlContent", htmlBody);
+
+            RequestBody body = RequestBody.create(
+                mapper.writeValueAsString(payload),
+                MediaType.parse("application/json")
+            );
+
+            Request request = new Request.Builder()
+                .url("https://api.brevo.com/v3/smtp/email")
+                .addHeader("accept", "application/json")
+                .addHeader("api-key", apiKey)
+                .post(body)
+                .build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful()) {
+                    log.info("✅ Email successfully sent to {}", toEmail);
+                    System.out.println("✅ [EmailService] SUCCESS: Email sent to " + toEmail);
+                } else {
+                    String errorBody = response.body() != null ? response.body().string() : "No response body";
+                    log.error("❌ Email API failure. Code: {}, Body: {}", response.code(), errorBody);
+                    System.err.println("❌ [EmailService] ERROR: Failed to send email to " + toEmail + " | Code: " + response.code() + " | " + errorBody);
+                }
+            }
+        } catch (IOException e) {
+            log.error("❌ Unexpected IO error during email delivery to {}: {}", toEmail, e.getMessage(), e);
+            System.err.println("❌ [EmailService] ERROR: IO Exception " + e.getMessage());
         }
     }
 }
+
