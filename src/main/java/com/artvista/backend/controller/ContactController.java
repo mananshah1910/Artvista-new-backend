@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/contact")
-@CrossOrigin(origins = "*")
 public class ContactController {
+
 
     @Autowired
     private com.artvista.backend.repository.UserInquiryRepository userInquiryRepository;

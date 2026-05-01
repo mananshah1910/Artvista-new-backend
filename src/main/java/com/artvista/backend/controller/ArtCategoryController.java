@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/categories")
-@CrossOrigin(origins = "*")
 public class ArtCategoryController {
 
     @Autowired

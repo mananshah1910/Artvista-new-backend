@@ -19,7 +19,7 @@ public class OtpService {
         String otp = String.format("%06d", random.nextInt(1000000));
         long expirationTime = System.currentTimeMillis() + (EXPIRE_MINS * 60 * 1000);
         otpCache.put(email, new OtpData(otp, expirationTime));
-        System.out.println("🔑 [OtpService] OTP generated for " + email + ": " + otp + " (Expires in 2 mins)");
+        System.out.println("🔑 [OtpService] OTP generated for " + email + ": " + otp + " (Expires in " + EXPIRE_MINS + " mins)");
         return otp;
     }
 
