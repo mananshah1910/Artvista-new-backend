@@ -2,8 +2,10 @@ package com.artvista.backend.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import com.artvista.backend.config.BrevoProperties;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -17,8 +19,8 @@ public class EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
 
-    @Value("${brevo.api.key:bskFVPtWSTJ1MmD}")
-    private String apiKey;
+    @Autowired
+    private BrevoProperties brevoProperties;
 
     @Value("${spring.mail.username:mananshah7263@gmail.com}")
     private String fromEmail;
@@ -87,6 +89,7 @@ public class EmailService {
 
     private void sendEmail(String toEmail, String subject, String htmlBody) {
         if (toEmail == null || subject == null || htmlBody == null) return;
+        String apiKey = brevoProperties.getApiKey();
         if (apiKey == null || apiKey.isEmpty()) {
             System.err.println("❌ [EmailService] ERROR: EMAIL_API_KEY is not set. Cannot send email to " + toEmail);
             return;
