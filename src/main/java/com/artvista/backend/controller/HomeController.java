@@ -1,4 +1,4 @@
-package com.artgallery.backend.controller;
+package com.artvista.backend.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

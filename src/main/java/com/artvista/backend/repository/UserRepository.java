@@ -1,6 +1,6 @@
-package com.artgallery.backend.repository;
+package com.artvista.backend.repository;
 
-import com.artgallery.backend.model.User;
+import com.artvista.backend.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

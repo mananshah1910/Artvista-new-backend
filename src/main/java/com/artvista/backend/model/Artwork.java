@@ -1,4 +1,4 @@
-package com.artgallery.backend.model;
+package com.artvista.backend.model;
 
 import jakarta.persistence.*;
 
@@ -17,11 +17,16 @@ public class Artwork {
     private String history;
     
     private String medium;
+    @Column(name = "creation_year")
     private String year;
     private String image;
     
     @Column(nullable = false)
     private String status; // pending, approved
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "art_category_id")
+    private ArtCategory artCategory;
 
     public Artwork() {}
 
@@ -43,4 +48,6 @@ public class Artwork {
     public void setImage(String image) { this.image = image; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+    public ArtCategory getArtCategory() { return artCategory; }
+    public void setArtCategory(ArtCategory artCategory) { this.artCategory = artCategory; }
 }

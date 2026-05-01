@@ -1,4 +1,4 @@
-package com.artgallery.backend.model;
+package com.artvista.backend.model;
 
 import jakarta.persistence.*;
 

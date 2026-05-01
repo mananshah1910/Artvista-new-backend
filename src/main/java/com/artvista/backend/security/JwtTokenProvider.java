@@ -1,4 +1,4 @@
-package com.artgallery.backend.security;
+package com.artvista.backend.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

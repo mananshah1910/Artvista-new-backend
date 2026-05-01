@@ -1,4 +1,4 @@
-package com.artgallery.backend.config;
+package com.artvista.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
-import com.artgallery.backend.security.JwtAuthenticationFilter;
+import com.artvista.backend.security.JwtAuthenticationFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -34,14 +34,15 @@ public class SecurityConfig {
             .cors(withDefaults())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/artworks/**", "/api/exhibitions/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/artworks/**", "/api/exhibitions/**", "/api/categories/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/contact").permitAll()
                 .anyRequest().authenticated()
             );
         
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-        
         return http.build();
     }
 
@@ -52,9 +53,14 @@ public class SecurityConfig {
             "http://localhost:5173",
             "http://localhost:5174",
             "http://localhost:5175",
+            "http://localhost:5176",
+            "http://localhost:5177",
+            "http://localhost:5178",
+            "http://localhost:5179",
+            "http://localhost:5180",
             "https://artvista-frontend.vercel.app"
         ));
-        configuration.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"));
         configuration.setAllowedHeaders(java.util.Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();

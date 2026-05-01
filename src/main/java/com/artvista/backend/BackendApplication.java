@@ -1,4 +1,4 @@
-package com.artgallery.backend;
+package com.artvista.backend;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;

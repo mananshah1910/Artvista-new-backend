@@ -1,12 +1,13 @@
-package com.artgallery.backend.controller;
+package com.artvista.backend.controller;
 
-import com.artgallery.backend.model.Artwork;
-import com.artgallery.backend.repository.ArtworkRepository;
+import com.artvista.backend.model.Artwork;
+import com.artvista.backend.repository.ArtworkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/artworks")
@@ -44,5 +45,15 @@ public class ArtworkController {
     public ResponseEntity<?> deleteArtwork(@PathVariable @org.springframework.lang.NonNull Long id) {
         artworkRepository.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity<?> health() {
+        long count = artworkRepository.count();
+        return ResponseEntity.ok(Map.of(
+            "status", "UP",
+            "artworksCount", count,
+            "database", "H2 (In-Memory)"
+        ));
     }
 }

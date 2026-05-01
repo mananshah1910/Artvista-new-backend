@@ -1,7 +1,7 @@
-package com.artgallery.backend.controller;
+package com.artvista.backend.controller;
 
-import com.artgallery.backend.model.Exhibition;
-import com.artgallery.backend.repository.ExhibitionRepository;
+import com.artvista.backend.model.Exhibition;
+import com.artvista.backend.repository.ExhibitionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
